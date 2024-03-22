@@ -1,5 +1,5 @@
 # STARD
-Welcome to StaRD(the STAtute Retrieval Dataset)This is an innovative dataset derived from real-world legal consultation inquiries made by the general public. STARD addresses a notable void in the current landscape of law retrieval datasets, which primarily focus on professional legal queries, thereby neglecting the complexity and variety inherent in layperson inquiries.
+Welcome to StaRD(the STAtute Retrieval Dataset).This is an innovative dataset derived from real-world legal consultation inquiries made by the general public. STARD addresses a notable void in the current landscape of law retrieval datasets, which primarily focus on professional legal queries, thereby neglecting the complexity and variety inherent in layperson inquiries.
 
 ## Overview
 
@@ -81,7 +81,7 @@ train.negatives.tsv   # Negative statutes corresponding to train
 train.query.txt       # Query content in train
 ```
 
-The `dev` and `train` are randomly split with a 4:1 ratio and the negatives are generated randomly from the whole corpus.
+The `dev` and `train` are randomly split with a 1:4 ratio and the negatives are generated randomly from the whole corpus.
 
 ### BM25
 
@@ -109,7 +109,7 @@ We use the  **Dense** toolkit to implement dense retrieval. We use `Chinese-Robe
 
 Begin with the raw data in `data/example` , to run the example, you may want to first download the model from  huggingface and run the following bash scripts.
 
-You need to modify the relative path to be your model path in the file before you run it.  
+You need to modify the relative path to be your model path in the bash files before you run it.  
 
 ```bash
 cd src
