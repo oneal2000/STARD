@@ -1,27 +1,73 @@
-# STARD
-Welcome to StaRD(the STAtute Retrieval Dataset).This is an innovative dataset derived from real-world legal consultation inquiries made by the general public. STARD addresses a notable void in the current landscape of law retrieval datasets, which primarily focus on professional legal queries, thereby neglecting the complexity and variety inherent in layperson inquiries.
+# STARD: A Statute Retrieval Dataset for Layperson Queries
+
 
 ## Overview
 
-StaRD is a dataset derived from real-world legal consultation inquiries.The whole dataset consists of 1543 queries focus on professional legal queries.
+Welcome to the official GitHub repository for STARD (STAtute Retrieval Dataset). STARD is derived from real-world legal consultation questions made by the general public. 
 
-In the dataset,we provide the origin corpus and queries files,you could find them in
+Unlike existing statute retrieval datasets that focus predominantly on professional legal queries, STARD captures the complexity and diversity of layperson queries. 
 
+Through a comprehensive evaluation of various retrieval baselines, including conventional methods and those employing advanced techniques such as GPT-4, we reveal that existing retrieval approaches all fall short of achieving optimal results. 
+
+Additionally, we show that employing STARD as a Retrieval-Augmented Generation (RAG) dataset markedly improves LLM's performance on legal tasks, which indicates that STARD is a pivotal resource for developing more accessible and effective legal systems.
+
+
+
+## Installation Instructions
+
+### Requirements
+
+Before you begin, make sure you have the following packages installed in your environment:
+
+```plaintext
+jieba==0.42.1
+numpy==1.23.3
+pandas==1.5.0
+torch==1.8.0
+tqdm==4.49.0
+transformers==4.2.0
 ```
-data/corpus.jsonl
+
+### Setting Up Your Environment
+
+To create a new environment and install the required packages except for **Dense**, follow these steps:
+
+```bash
+conda create -n stard python=3.9
+conda activate stard
+pip install -r requirements.txt
+```
+
+**Note:** The `requirements.txt` file should exclude`torch`. Install PyTorch specifically according to your system setup by following the [official PyTorch installation guide](https://pytorch.org/get-started/locally/).
+
+```bash
+pip install torch==1.8.0
+```
+
+### Installing Dense
+
+**Dense** is a specialized dense retriever toolkit that must be installed separately. Visit the [Dense repository](https://github.com/luyug/Dense) and follow the installation instructions provided there.
+
+
+
+
+
+## Dataset Structure
+
+### Directory Overview
+
+The root directory for the STARD dataset is located at `/STARD/data`. The dataset comprises a total of 1,543 queries and a corresponding large-scale corpus of 55,348 candidate statutory articles.
+
+### Data Files and Structure
+
+**Queries:**
+The queries and their relevant statutory articles are stored in the JSON file:
+```
 data/queries.json
 ```
 
-The corpus consists of all the latest laws of China,with a total number of over 50 thousands statutes.In `data/corpus.jsonl`,each line containing a dict describes a statute,the dict have three fields:`id` , `name` and `content` 
-
-An example is given as below
-
-```json
-{"id": 22648, "name": "农村土地承包经营纠纷调解仲裁法第十八条", "content": "农村土地承包经营纠纷申请仲裁的时效期间为二年，自当事人知道或者应当知道其权利被侵害之日起计算。\\n"}
-```
-
-A query example  in `queries.json` is as below
-
+**Example Query:**
+Below is a sample entry from `queries.json`, showcasing the structure and data fields:
 ```json
 {
         "query_id": 1542,
@@ -38,78 +84,96 @@ A query example  in `queries.json` is as below
             "建筑法第四十八条",
             "保险法第三十九条"
         ]
-    }
+ }
+
+Translated:
+{
+    "query_id": 1542,
+    "question": "Must enterprises pay work-related injury insurance for employees engaged in hazardous work? Can the obligation to pay work injury insurance be waived if the enterprise insures employees against accidental injuries?",
+    "relevant_laws": {
+        "Construction Law Article 48": "Construction enterprises must, in accordance with the law, pay work injury insurance for their employees. Enterprises are encouraged to handle accidental injury insurance for employees engaged in hazardous work and pay the insurance premiums.",
+        "Insurance Law Article 39": "The beneficiary of personal insurance is designated by the insured or the policyholder. When the policyholder designates the beneficiary, the consent of the insured is required. If the policyholder insures a worker with whom they have a labor relationship, they may not designate anyone other than the insured and their immediate family as beneficiaries. If the insured is a person without civil conduct capacity or with limited civil conduct capacity, their guardian may designate the beneficiary."
+    },
+    "match_id": [11543, 16411],
+    "match_name": ["Construction Law Article 48", "Insurance Law Article 39"]
+}
 ```
 
-Each query contains the above five fields, `问题` field describes the question itself . `match_id` and `match_name` give the `id`  and `name` fields refer to  `corpus.jsonl` .They are relative statutes.
-
-## Install environment
-
-### Requirements
-
+**Corpus:**
+The comprehensive corpus containing all candidate statutory articles is available in:
 ```
-dense==0.0.1
-
-jieba==0.42.1
-numpy==1.23.3
-pandas==1.5.0
-torch==1.8.0
-tqdm==4.49.0
-transformers==4.2.0
+data/corpus.jsonl
 ```
 
- Except **Dense**,the other packages will be installed through the following instructions. In order to ensure that the version of `torch` is correct, you may want to follow the instructions of [official documentation](https://pytorch.org/get-started/locally/) for installation.
+**Example Article:**
+Here is an example from `corpus.jsonl`, illustrating the format and content:
 
-```bash
-conda create -n stard python=3.9
-conda activate stard
-pip install torch==1.8.0
-pip install -r requirements.txt
+```json
+{
+	"id": 22648,
+	"name": "农村土地承包经营纠纷调解仲裁法第十八条",
+	"content": "农村土地承包经营纠纷申请仲裁的时效期间为二年，自当事人知道或者应当知道其权利被侵害之日起计算。\\n"
+}
+
+Translated:
+{
+    "id": 22648,
+    "name": "Article 18 of the Law on Mediation and Arbitration of Disputes over Rural Land Contracting Management",
+    "content": "The limitation period for applying for arbitration of disputes over rural land contracting management is two years, calculated from the date when the party becomes aware or should have become aware of the infringement of their rights."
+}
 ```
 
-The package **Dense** is a dense retriever toolkit,which should be downloaded seperately. [Click here](https://github.com/luyug/Dense) for the repo of Dense, follow the repo to install **Dense**.
+### Data Collection Methodology
+
+The corpus consists of national-level laws, regulations, and judicial interpretations from China. Our legal team manually curated and downloaded the latest versions from official government sources. Each document is divided into the smallest searchable units based on articles, facilitating detailed legal research and application.
+
+
+
+
 
 ## Evaluation
 
-We use several different retrieval algorithms to test our dataset,including `BM25`, `Query Likelihood` and `Dense Retriever`. To give a consistent test, we process the origin queries and split the dataset into two parts ,`train` and `dev` ,all relative files are in `data/example` 
+Our evaluation framework tests the dataset using multiple retrieval algorithms, including BM25, Query Likelihood, and Dense Retriever. We standardize our evaluation process by pre-processing the original queries and partitioning the dataset into two subsets: `train` and `dev`. All related files are located in `data/example`.
+
+### Dataset Files
+
+Here are the files associated with the development and training datasets:
 
 ```
-dev.query.txt         # Query content in dev
-qrels.dev.tsv         # Relateive statute ids in dev
-qrels.train.tsv       # Relateive statute ids in train
-train.negatives.tsv   # Negative statutes corresponding to train
-train.query.txt       # Query content in train
+dev.query.txt         # Queries for the development set
+qrels.dev.tsv         # Relevant statute IDs for the development set
+qrels.train.tsv       # Relevant statute IDs for the training set
+train.negatives.tsv   # Randomly sampled non-relevant IDs for contrastive learning
+train.query.txt       # Queries for the training set
 ```
 
-The `dev` and `train` are randomly split with a 1:4 ratio and the negatives are generated randomly from the whole corpus.
+The datasets `dev` and `train` are randomly split in a 1:4 ratio. Negative samples are also randomly generated from the entire corpus.
 
 ### BM25
 
-We implement `BM25` and the source code is in `src/BM25/BM25.py`,we also give an example to test the above `dev` set.
+We have implemented the BM25 algorithm. The source code is available at `src/BM25/BM25.py`. An example script to test the development set is provided:
 
 ```bash
-cd src
-cd BM25
+cd src/BM25
 python test.py
 ```
 
- ### Query Likelihood
+### Query Likelihood
 
-We also implement `Query Likelihood` algorithm and the source code is in `src/QLD/test_qld.py`.
+The Query Likelihood algorithm is also implemented, with the source code located at `src/QLD/test_qld.py`.
 
 ```bash
-cd src
-cd QLD
+cd src/QLD
 python test_qld.py
 ```
 
-### Dense Retriever 
 
-We use the  **Dense** toolkit to implement dense retrieval. We use `Chinese-Roberta-wwm` as the base model and use `train` set with negatives to do contrastive learning to fine-tune the model.
 
-Begin with the raw data in `data/example` , to run the example, you may want to first download the model from  huggingface and run the following bash scripts.
+### Dense Retriever
 
-You need to modify the relative path to be your model path in the bash files before you run it.  
+For dense retrieval, we use the Dense toolkit and the `Chinese-Roberta-wwm` model as the back-bone model. The model is fine-tuned on the training set using negative sampling for contrastive learning.
+
+To run the examples, begin with the raw data in `data/example`. Ensure the model is downloaded from Hugging Face and modify the script paths to match your local setup:
 
 ```bash
 cd src
@@ -118,34 +182,9 @@ bash train.sh
 bash test.sh
 ```
 
-After running,the result is stored in `data/example/$TOKENZIER_ID/ranking/rank.txt.macro` ,each line in the file corresponds to a result,that is 
+Results are stored in `data/example/$TOKENIZER_ID/ranking/rank.txt.macro`, formatted as:
 
 ```
 [query_id] [match_id] [rank]
-```
-
-## RAG in LLM
-
-Our dataset provides professional legal questions. Fine tuning with it will enhance the ability of retrieval model.
-
-In our experiments, we use Chinese-Roberta-wwm as bese model,do MLM training with our corpus and successively fine tune the model with GPT generated data and our dataset.
-
-As for GPT generated queries,we ask GPT to make quesitons toward certain statute and then we could generate `Query-Statute` pairs to fine tune our model.
-
-Then use the fine-tuned model to do RAG. Take Jec-QA as an example,first do retrieval with the question and its options,then we find the relative statutes. Involve the statutes in the prompt then we finish the RAG.
-
- One of prompt format is as below
-
-```
-请根据以下法条回答问题，下面给出法条:
-   【法条名1：法条内容】
-  ......
-   【法条名10：法条内容】
-请根据上面的法条和你的知识回答问题,优先参考法条，不要解释原因。你的答案只需包含选项的序号,请注意，下面给出问题
-   【问题题面】
-A. 【选项内容】
-  ...
-  ...   
- 请给出答案（只包含选项字母，不要有汉字）：
 ```
 
