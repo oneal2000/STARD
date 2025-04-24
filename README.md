@@ -1,6 +1,9 @@
 # STARD: A Statute Retrieval Dataset for Layperson Queries
 
 
+📢 This dataset now includes the Answer for each Question! Many people expressed interest in the answers to the questions, not just the relevant articles. To address this, we organized a legal team to annotate the answers for each question, now available at https://github.com/oneal2000/LeCoQA
+
+
 ## Overview
 
 Welcome to the official GitHub repository for STARD (STAtute Retrieval Dataset). STARD is derived from real-world legal consultation questions made by the general public. 
